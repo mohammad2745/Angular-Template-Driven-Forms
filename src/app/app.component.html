@@ -1,11 +1,12 @@
 <div class="container mt-5">
   <div class="form-area">
+    <h2 class="text-center">Template Driven Form</h2>
     <form #f='ngForm' (ngSubmit)="onSubmit(f)">
       <div class="form-group">
         <label>First name</label>
         <input type="text" placeholder="first name" class="form-control is-invalid" name="fullName" ngModel
-          #fullName="ngModel" (change)="getValue(fullName)" required
-          [ngClass]="{ 'is-invalid': fullName.touched && fullName.invalid }" minlength="5" maxlength="10">
+          #fullName="ngModel" required [ngClass]="{ 'is-invalid': fullName.touched && fullName.invalid }" minlength="5"
+          maxlength="10">
       </div>
 
       <div *ngIf="fullName?.errors?.['required']">
@@ -19,8 +20,9 @@
 
       <div class="form-group">
         <label>Email</label>
-        <input type="email" placeholder="email" class="form-control is-invalid" name="email" ngModel #email="ngModel" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" required
-        [ngClass]="{ 'is-invalid': email.touched && email.invalid }">
+        <input type="email" placeholder="email" class="form-control is-invalid" name="email" ngModel #email="ngModel"
+          pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" required
+          [ngClass]="{ 'is-invalid': email.touched && email.invalid }">
       </div>
 
       <div *ngIf="email?.errors?.['required']">
@@ -33,8 +35,8 @@
 
       <div class="form-group">
         <label>Address</label>
-        <textarea cols="30" rows="10" placeholder="address" class="form-control is-invalid" name="address" ngModel #address="ngModel" required
-          [ngClass]="{ 'is-invalid': address.touched && address.invalid }"></textarea>
+        <textarea cols="30" rows="10" placeholder="address" class="form-control is-invalid" name="address" ngModel
+          #address="ngModel" required [ngClass]="{ 'is-invalid': address.touched && address.invalid }"></textarea>
       </div>
 
       <div *ngIf="address?.errors?.['required']">
@@ -42,6 +44,65 @@
       </div>
 
       <button type="submit" class="btn btn-primary" [disabled]="f.invalid">submit</button>
+    </form>
+
+    <br><br>
+
+    <h2 class="text-center">Reactive Form</h2>
+    <form [formGroup]="form" (ngSubmit)="form.valid && onSubmitReactive()">
+      <div class="form-group">
+        <label>First name</label>
+        <input type="text" placeholder="first name" class="form-control" name="fullName" formControlName="fullName">
+        <!-- Error message for fullName -->
+        <div *ngIf="isFieldInvalid('fullName')" class="text-danger">
+          <small *ngIf="form.get('fullName')?.errors?.['required']">Full name is required.</small>
+          <small *ngIf="form.get('fullName')?.errors?.['minlength']">Full name must be at least 5 characters
+            long.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="email" class="form-control" name="email" formControlName="email">
+        <!-- Error message for email -->
+        <div *ngIf="isFieldInvalid('email')" class="text-danger">
+          <small *ngIf="form.get('email')?.errors?.['required']">Email is required.</small>
+          <small *ngIf="form.get('email')?.errors?.['email']">Please enter a valid email.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Address</label>
+        <textarea cols="30" rows="10" placeholder="address" class="form-control" name="address"
+          formControlName="address"></textarea>
+        <!-- Error message for address -->
+        <div *ngIf="isFieldInvalid('address')" class="text-danger">
+          <small *ngIf="form.get('address')?.errors?.['required']">Address is required.</small>
+          <small *ngIf="form.get('address')?.errors?.['minlength']">Address must be at least 10 characters long.</small>
+        </div>
+      </div>
+
+      <div [formGroup]="form.get('contactDetails')">
+        <div class="form-group">
+          <label>Mobile</label>
+          <input type="text" placeholder="mobile" class="form-control" name="mobile" formControlName="mobile">
+          <!-- Error message for mobile -->
+          <div *ngIf="isFieldInvalid('mobile')" class="text-danger">
+            <small *ngIf="form.get('mobile')?.errors?.['required']">Mobile is required.</small>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label>Landline</label>
+          <input type="text" placeholder="landline" class="form-control" name="landline" formControlName="landline">
+          <!-- Error message for landline -->
+          <div *ngIf="isFieldInvalid('landline')" class="text-danger">
+            <small *ngIf="form.get('landline')?.errors?.['required']">Landline is required.</small>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Submit</button>
     </form>
   </div>
 </div>
